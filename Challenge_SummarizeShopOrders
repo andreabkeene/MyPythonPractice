@@ -1,0 +1,125 @@
+#Summarize Shop Orders
+#Complete the summarize_orders function.
+
+#You work for a small online shop. Each order is stored as a dictionary with:
+
+#a customer name
+#a dictionary of items and quantities
+#Your job is to build a summary report from a list of these orders.
+
+#Function Requirements
+#Write a function:
+
+#def summarize_orders(orders):
+#    # your code here
+
+#orders is a list of dictionaries. Each order dictionary looks like this:
+
+#{
+#    "customer": "Alice",
+#    "items": {
+#        "apple": 2,
+#        "banana": 1,
+#    },
+#}
+
+#Your function must return one dictionary with three keys:
+
+#"item_totals": a dictionary mapping each item name to the total quantity ordered across all customers
+#"customer_totals": a dictionary mapping each customer name to the total quantity of all items they ordered
+#"unique_customers_per_item": a dictionary mapping each item name to a set of customer names who ordered that item at least once
+#If orders is empty, all three dictionaries in the result should be empty.
+
+#Details
+#item_totals
+
+#Keys: item names (strings)
+#Values: total quantity ordered (integers)
+#Sum quantities from all orders.
+#customer_totals
+
+#Keys: customer names (strings)
+#Values: the sum of all item quantities from that customer.
+#unique_customers_per_item
+
+#Keys: item names (strings)
+#Values: a set of customer names (no duplicates) who ordered that item.
+#A set in Python is an unordered collection of unique values.
+#You will need to:
+
+#Loop over the list of orders
+#For each order, loop over the items dictionary
+#Update the three result dictionaries as you go
+#Do not worry about input validation. Assume orders always has the correct structure.
+
+#Example
+#orders = [
+#    {
+#        "customer": "Alice",
+#        "items": {"apple": 2, "banana": 1},
+#    },
+#    {
+#        "customer": "Bob",
+#        "items": {"banana": 3},
+#    },
+#    {
+#        "customer": "Alice",
+#        "items": {"orange": 4},
+#    },
+#]
+
+#summary = summarize_orders(orders)
+#print(summary["item_totals"])
+## {"apple": 2, "banana": 4, "orange": 4}
+
+#print(summary["customer_totals"])
+## {"Alice": 7, "Bob": 3}
+
+#print(summary["unique_customers_per_item"])
+## {"apple": {"Alice"}, "banana": {"Alice", "Bob"}, "orange": {"Alice"}}
+
+#Edge Cases
+#orders is an empty list: return three empty dictionaries.
+#A customer may appear in multiple orders.
+#An item may appear in multiple orders and for multiple different customers.
+#Your solution should rely on dictionaries, sets, and loops. You should not need any advanced Python features beyond what you have already learned.
+
+
+def summarize_orders(orders):
+    item_totals = {}
+    customer_totals = {}
+    unique_customers_per_item = {}
+
+    for order in orders:
+        customer = order["customer"]
+        items = order["items"]
+
+        order_total_quantity = 0
+
+        for item_name in items:
+            quantity = items[item_name]
+
+            if item_name in item_totals:
+                item_totals[item_name] = item_totals[item_name] + quantity
+            else:
+                item_totals[item_name] = quantity
+
+            order_total_quantity = order_total_quantity + quantity
+
+            if item_name not in unique_customers_per_item:
+                unique_customers_per_item[item_name] = set()
+
+            unique_customers_per_item[item_name].add(customer)
+
+        if customer in customer_totals:
+            customer_totals[customer] = customer_totals[customer] + order_total_quantity
+        else:
+            customer_totals[customer] = order_total_quantity
+
+    result = {
+        "item_totals": item_totals,
+        "customer_totals": customer_totals,
+        "unique_customers_per_item": unique_customers_per_item,
+    }
+
+    return result
